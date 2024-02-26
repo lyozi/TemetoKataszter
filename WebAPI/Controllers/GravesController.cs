@@ -100,6 +100,17 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        // DELETE: api/Graves/5
+        [HttpDelete]
+        public async Task<IActionResult> DeleteGraves()
+        {
+            var allGraveItems = await _context.GraveItems.ToListAsync();
+            _context.GraveItems.RemoveRange(allGraveItems);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool GraveExists(long id)
         {
             return _context.GraveItems.Any(e => e.Id == id);

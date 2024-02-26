@@ -9,8 +9,9 @@ namespace Domain.Models
     public class Grave
     {
         public long Id { get; set; }
-        public int Row { get; set; }
-        public int Number { get; set; }
-        public int Type { get; set; }
+        public short Row { get; set; }
+        public short Number { get; set; }
+        public short Type { get; set; }
+        public byte[]? Image { get; set; }
     }
 }
