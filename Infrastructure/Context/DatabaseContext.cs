@@ -14,10 +14,14 @@ namespace Infrastructure.Context
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options =>
-                options.UseNpgsql("Host=localhost;Port=5432;Database=TemetoKataszter;Username=lyozi;Password=jozsika20030101;"));
+                options.UseNpgsql("Host=localhost;Port=5432;Database=TemetoKataszter;Username=lyozi;Password=jozsika20030101;",
+                b => b.MigrationsAssembly("Infrastructure")));
+
         }
 
-        public DbSet<Grave> GraveItems { get; set; } = null!;
+        public DbSet<Grave> GraveItems { get; set; }
+
+        public DbSet<Deceased> DeceasedItems { get; set; }
     }
 }
  
