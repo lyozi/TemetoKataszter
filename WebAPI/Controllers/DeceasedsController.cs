@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 using Infrastructure.Context;
+using WebAPI.DTOs;
 
 namespace WebAPI.Controllers
 {
@@ -29,13 +30,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("Search")]
-        public async Task<ActionResult<IEnumerable<Deceased>>> SearchDeceasedItems(string? name, int? birthYearAfter, int? birthYearBefore, string? orderBy)
+        public async Task<ActionResult<IEnumerable<Deceased>>> SearchDeceasedItems(string? name, int? birthYearAfter, int? deceaseYearBefore, string? orderBy)
         {
             IQueryable<Deceased> query = _context.DeceasedItems;
 
             if (!string.IsNullOrEmpty(name))
             {
-                query = query.Where(d => d.Name.Contains(name));
+                query = query.Where(d => d.Name.ToUpper().Contains(name.ToUpper()));
             }
 
             if (birthYearAfter.HasValue)
@@ -46,11 +47,11 @@ namespace WebAPI.Controllers
                 }
             }
 
-            if (birthYearBefore.HasValue)
+            if (deceaseYearBefore.HasValue)
             {
-                if (birthYearBefore.Value > 0)
+                if (deceaseYearBefore.Value > 0)
                 {
-                    query = query.Where(d => d.DateOfBirth.Year <= birthYearBefore);
+                    query = query.Where(d => d.DateOfDeath.Year <= deceaseYearBefore);
                 }
             }
 
@@ -85,6 +86,21 @@ namespace WebAPI.Controllers
             var result = await query.ToListAsync();
             return result;
         }
+
+        [HttpGet("DeceasedsMessages/{id}")]
+        public async Task<ActionResult<DeceasedsMessagesDTO>> GetDeceasedMessagesDTO(long id)
+        {
+            var deceased = await _context.DeceasedItems.Include(d => d.MessageList).FirstOrDefaultAsync(d => d.Id == id);
+
+            if (deceased == null)
+            {
+                return NotFound();
+            }
+
+            var dto = DeceasedsMessagesDTO.FromDeceased(deceased);
+            return Ok(dto);
+        }
+
 
 
         // GET: api/Deceaseds/5

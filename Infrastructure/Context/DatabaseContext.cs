@@ -20,8 +20,8 @@ namespace Infrastructure.Context
         }
 
         public DbSet<Grave> GraveItems { get; set; }
-
         public DbSet<Deceased> DeceasedItems { get; set; }
+        public DbSet<Message> MessageItems { get; set; }
     }
 }
  
