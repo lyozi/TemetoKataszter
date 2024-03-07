@@ -117,6 +117,34 @@ namespace WebAPI.Controllers
             return deceased;
         }
 
+        [HttpPut("AddMessage/{id}")]
+        public async Task<IActionResult> AddMessage(long id, Message message)
+        {
+            var deceased = await _context.DeceasedItems
+                .Where(d => d.Id == id)
+                .Include(d => d.MessageList)
+                .FirstOrDefaultAsync();
+
+            if (deceased == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                if(deceased.MessageList == null)
+                {
+                    deceased.MessageList = new List<Message>();
+                }
+
+                deceased.MessageList.Add(message);
+
+                await _context.SaveChangesAsync();
+
+                return Ok(deceased);
+            }
+        }
+
+
         // PUT: api/Deceaseds/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
