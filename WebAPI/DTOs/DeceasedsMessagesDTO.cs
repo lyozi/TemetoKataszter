@@ -7,10 +7,6 @@ namespace WebAPI.DTOs
 {
     public class DeceasedsMessagesDTO
     {
-        public long Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTime DateOfDeath { get; set; }
-        public DateTime DateOfBirth { get; set; }
         public ICollection<Message> MessageList { get; set; } = new List<Message>();
         public short NrOfFlowers { get; set; }
         public short NrOfWreaths { get; set; }
@@ -24,10 +20,6 @@ namespace WebAPI.DTOs
 
             return new DeceasedsMessagesDTO
             {
-                Id = deceased.Id,
-                Name = deceased.Name,
-                DateOfDeath = deceased.DateOfDeath,
-                DateOfBirth = deceased.DateOfBirth,
                 MessageList = deceased.MessageList,
                 NrOfFlowers = (short)nrOfFlowers,
                 NrOfWreaths = (short)nrOfWreaths,

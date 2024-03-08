@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok(deceased);
+                return Ok(message);
             }
         }
 
