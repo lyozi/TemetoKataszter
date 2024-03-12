@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Context
 {
-    public class DatabaseContext : Microsoft.EntityFrameworkCore.DbContext
+    public class DatabaseContext : IdentityDbContext<IdentityUser>
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
