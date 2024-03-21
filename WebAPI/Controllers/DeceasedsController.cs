@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 using Infrastructure.Context;
 using WebAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace WebAPI.Controllers
 
         // GET: api/Deceaseds
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<IEnumerable<Deceased>>> GetDeceasedItems()
         {
             return await _context.DeceasedItems.ToListAsync();

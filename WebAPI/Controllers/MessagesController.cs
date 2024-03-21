@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
         // PUT: api/Messages1/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> PutMessage(long id, Message message)
         {
             if (id != message.Id)

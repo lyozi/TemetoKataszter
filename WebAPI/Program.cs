@@ -16,11 +16,21 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // identity-hez
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DatabaseContext>();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Admin", "Manager"));
+    options.AddPolicy("Member", policy => policy.RequireRole("Member"));
+});
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
@@ -29,26 +39,36 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// identity-hez
+// Identity
 app.MapIdentityApi<IdentityUser>();
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roles = new[] { "Admin", "Manager", "Member" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
+
+// Sajat logout endpoint
+app.MapPost("/logout", async (HttpContext httpContext, SignInManager<IdentityUser> signInManager) =>
+{
+    await signInManager.SignOutAsync();
+    return Results.Ok();
+});
+
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.MapPost("/logout", async (SignInManager<IdentityUser> signInManager,
-    [FromBody] object empty) =>
-{
-    if (empty != null)
-    {
-        await signInManager.SignOutAsync();
-        return Results.Ok();
-    }
-    return Results.Unauthorized();
-})
-.RequireAuthorization();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
