@@ -13,8 +13,11 @@ namespace Domain.Models
         public short Number { get; set; }
         public short Type { get; set; }
 
+        // Koordináták
+        public GraveUIPolygon GraveUIPolygon { get; set; }
+
         // public byte[] Image { get; set; } = new byte[0];
 
-        public ICollection<Deceased>? DeceasedList { get; set; }
+        public ICollection<Deceased> DeceasedList { get; set; }
     }
 }

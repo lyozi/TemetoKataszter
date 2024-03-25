@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240324173439_Point-Fields-Renamed")]
+    partial class PointFieldsRenamed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,26 +128,26 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.Point", b =>
                 {
-                    b.Property<long?>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long?>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("GraveUIPolygonId")
+                    b.Property<long?>("GraveUIPolygonId")
                         .HasColumnType("bigint");
 
                     b.Property<double>("Lat")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Lng")
+                    b.Property<double>("Lon")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GraveUIPolygonId");
 
-                    b.ToTable("Points");
+                    b.ToTable("Point");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -367,10 +370,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Models.Point", b =>
                 {
                     b.HasOne("Domain.Models.GraveUIPolygon", null)
-                        .WithMany("LatLngs")
-                        .HasForeignKey("GraveUIPolygonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Points")
+                        .HasForeignKey("GraveUIPolygonId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -439,7 +440,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.GraveUIPolygon", b =>
                 {
-                    b.Navigation("LatLngs");
+                    b.Navigation("Points");
                 });
 #pragma warning restore 612, 618
         }

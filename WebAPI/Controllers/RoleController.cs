@@ -28,7 +28,7 @@ namespace Identity.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return NotFound("User not found.");
+                return Unauthorized("User not found.");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
