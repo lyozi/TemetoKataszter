@@ -22,7 +22,7 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Admin", "Manager"));
+    options.AddPolicy("Manager", policy => policy.RequireRole("Admin", "Manager"));
     options.AddPolicy("Member", policy => policy.RequireRole("Member"));
 });
 
